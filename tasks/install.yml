@@ -1,0 +1,20 @@
+---
+- name: Download Maven package from official web
+  get_url: url={{ maven_mirrors }}/{{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz force=no mode=0755
+  register: result
+  until: result|success
+  retries: 1
+  delay: 2 
+  tags:
+    - maven 
+
+- name: Decompressed Maven package 
+  unarchive: src={{ home_dir }}/{{ maven_version }}.tar.gz dest={{ home_dir }} creates={{ maven_decompress }} copy=no
+  tags:
+    - unmaven
+
+#- file: dest={{ hibench_home }} src=/opt/hibench-{{ hibench_version }} state=link
+- file: dest={{ maven_home }} src={{ maven_decompress }} state=link
+  tags:
+    - link
+

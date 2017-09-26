@@ -1,0 +1,8 @@
+---
+- template: src=settings.xml dest={{ maven_home }}/conf/settings.xml owner=root group=root
+- lineinfile: dest=/etc/profile regexp='$$' line='export MAVEN_HOME=/usr/local/maven/apache-maven-3.3.9'
+- lineinfile: dest=/etc/profile regexp='^export$$' insertafter='export' line='export PATH=$PATH:$MAVEN_HOME/bin'
+- shell: source /etc/profile
+  register: result
+  tags:
+    - tag1
