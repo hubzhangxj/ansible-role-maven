@@ -5,39 +5,14 @@
   register: maven_installed
   tags:
     - m1
-- include: maven_install.yml
+- include: install.yml
   when: not maven_installed.stat.exists
   tags:
     - m2
 
-- include: maven_configure.yml
-  when: not maven_installed.stat.exists
+- include: configure.yml
+  #when: not maven_installed.stat.exists
   tags:
     - m3
 
 
-# tasks file for ansible-role-hibenchi/
-## hibench install and configure 
-
-# tasks file for ansible-role-hibench/
-- stat: path={{ hibench_home }}
-  register: hibench_installed
-  tags:
-    - m4
-
-- include: hibench_install.yml
-  when: not hibench_installed.stat.exists
-  tags:
-    - m5
-
-- include: hibench_configure.yml
-  when: not hibench_installed.stat.exists
-  tags:
-    - m6
-
-#- name: Execute the command ./bin/build_all.sh, build hibench
-#  shell: ./build_all.sh
-#  args: 
-#    chdir={{ hibench_home }}/bin
-#  tags:
-#    - m7
