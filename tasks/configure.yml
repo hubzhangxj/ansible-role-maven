@@ -3,12 +3,10 @@
 - shell: echo '#maven_config'  >> /etc/profile
 - shell: echo 'export MAVEN_HOME=/usr/local/maven/apache-maven-3.3.9'  >> /etc/profile
 - shell: echo 'export PATH=$PATH:$MAVEN_HOME/bin'  >> /etc/profile
-
 #- lineinfile: dest=/etc/profile regexp='$$'  insertafter='^*' line='#maven'
 #- lineinfile: dest=/etc/profile regexp='$a#maven_config'  insertafter='^#maven_config$' line='export MAVEN_HOME=/usr/local/maven/apache-maven-3.3.9'
 #  tags:
 #    - s2
-
 #- lineinfile: dest=/etc/profile regexp='$$'  line='export MAVEN_HOME=/usr/local/maven/apache-maven-3.3.9'
 #- lineinfile: dest=/etc/profile regexp='^export$$' insertafter='export' line='export PATH=$PATH:$MAVEN_HOME/bin'
 #- command: source /etc/profile
