@@ -1,9 +1,5 @@
 #!/bin/bash
-
-#CURDIR=$(cd `dirname $0`; pwd)
-#set in configure.yml responding to scripts
-#echo "export MAVEN_HOME=/usr/local/maven/apache-maven-3.3.9" >> /etc/profile
-#echo "export PATH=$PATH:$MAVEN_HOME/bin" >> /etc/profile
+#default execute "./${bench_build} -i ./tests/inventory ./tests/test.yml
 
 ##################################################################################
 # Const Variables, PATH
@@ -34,15 +30,13 @@ Options:
 			connect as this user (default=None)
 	-e EXTRA_VARS, --extra-vars=EXTRA_VARS
                         set additional variables as key=value or YAML/JSON
-	-v, --verbose   verbose mode (-vvv for more, -vvvv to enable
+	-d, --debug     debug mode (-vvv for more, -vvvv to enable
                         connection debugging)
 Example:
-	./${bench_build} --help
-	./estuary/build.sh clean --builddir=./workspace
-	./sailing/build.sh --builddir=./workspace --deploy=iso -a Estuary
-	./sailing/build.sh --builddir=./workspace --deploy=iso -a China
-	./sailing/build.sh --builddir=./workspace --deploy=usb:/dev/sdb --deploy=iso
-	./sailing/build.sh --builddir=./workspace --distro=Ubuntu,CentOS  --capacity=50,50 --deploy=usb:/dev/sdb --deploy=iso
+	./${bench_build}
+	./${bench_build} --help 
+	./${bench_build} -i ../../hosts ../site.yml --debug
+	./${bench_build} -i ../../hosts ../site.yml --debug --user=root --extra-vars "ansible_sudo_pass=root" 
 EOF
 }	
 	
@@ -63,7 +57,7 @@ do
                 -h | --help) Usage ; exit 0 ;;
 		-i | --inventory-file) INVENTORY=$ac_optarg ;;
                 -u | --user) REMOTE_USER=$ac_optarg ;;
-		--capacity) CAPACITY=$ac_optarg ;;
+		-d | --debug) DEBUG="-vvvv" ;;
 		-e | --extra-vars) EXTRA_VARS=$ac_optarg ;;
                 #-a) if [ x"$ac_optarg" = x"China" ]; then DOWNLOAD_FTP_ADDR=$CHINA_INTERAL_FTP_ADDR; fi ;;
                 *) Usage ; echo "Unknown option $1" ; exit 1 ;;
@@ -79,9 +73,7 @@ done
 benchmark_deploy()
 {
     source /etc/profile
-    #pushd ../../ > /dev/null
     ansible-playbook -i ${INVENTORY} ${SITE} ${DEBUG} --user=${REMOTE_USER} --extra-vars=${EXTRA_VARS} 
-    #popd > /dev/null
 }
 
 if ! benchmark_deploy; then
