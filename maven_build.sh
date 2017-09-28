@@ -1,6 +1,6 @@
 #!/bin/bash
 #default execute "./${bench_build} -i ./tests/inventory ./tests/test.yml
-
+set -e
 ##################################################################################
 # Const Variables, PATH
 ###################################################################################
@@ -13,6 +13,11 @@ bench_build=`filename ${0}`
 INVENTORY='tests/inventory'
 REMOTE_USER='root'
 EXTRA_VARS='ansible_sudo_pass=root'
+curdir=$(cd `dirname $0`; pwd)
+bench_path=${curdir##*/}
+bench_role_git='ansible-role-maven'
+bench_role_galaxy='hubzhangxj.maven'
+
 ###################################################################################
 # Usage
 ###################################################################################
@@ -68,6 +73,24 @@ do
 done
 
 ###################################################################################
+# Benchmark tests/test.yml judge and replace according to directory's name
+###################################################################################
+benchmark_role()
+{
+
+    if  grep -r ${bench_path} ${default_site};then
+        echo "${default_site} not necessary to replace of ${bench_path} "
+    elif [ "$bench_path" == "$bench_role_galaxy" ];then
+       echo "${bench_role_galaxy} necessary to replace of ${bench_role_git} "
+       sed -i '5s/ansible-role-maven/hubzhangxj.maven/'  ${default_site}
+    elif [ "$bench_path" == "$bench_role_git" ];then
+       echo "${bench_role_git} necessary to replace of ${bench_role_galaxy} "
+       sed -i '5s/hubzhangxj.maven/ansible-role-maven/'  ${default_site}
+    fi
+
+}
+
+###################################################################################
 # Deployment benchmark
 ###################################################################################
 benchmark_deploy()
@@ -75,6 +98,12 @@ benchmark_deploy()
     source /etc/profile
     ansible-playbook -i ${INVENTORY} ${SITE} ${DEBUG} --user=${REMOTE_USER} --extra-vars=${EXTRA_VARS} 
 }
+
+
+if ! benchmark_role; then
+        echo -e "\033[31mError! Benchmark role error!\033[0m" ; exit 1
+fi
+
 
 if ! benchmark_deploy; then
 	echo -e "\033[31mError! Benchmark deploy failed!\033[0m" ; exit 1
