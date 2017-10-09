@@ -1,10 +1,17 @@
 ---
-- name: Download Maven package from official web
-  get_url: url={{ maven_mirrors }}/{{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz force=no mode=0755
-  register: result
-  until: result|success
-  retries: 1
-  delay: 2 
+#- name: Download Maven package from official web
+#  #git clone so slowly ,use tar file locally.
+#  get_url: url={{ maven_mirrors }}/{{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz force=no mode=0755
+#  register: result
+#  until: result|success
+#  retries: 1
+#  delay: 2
+#  tags:
+#    - maven
+
+- name: Copy Maven package
+  #copy: src={{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz owner=root group=root mode=0755
+  copy: src={{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz owner=root group=root mode=0755
   tags:
     - maven 
 

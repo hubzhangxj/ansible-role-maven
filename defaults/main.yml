@@ -1,8 +1,8 @@
 # defaults file for ansible-role-hibench/
 # defaults install maven for benchmark test 
 # all name little letter
-home_dir: /opt
-maven_home: /opt/maven
+home_dir: /usr/local
+maven_home: /usr/local/maven
 # List of servers to download the hadoop code
 maven_mirrors: http://apache.forsale.plus/maven/maven-3/3.3.9/binaries/
 
