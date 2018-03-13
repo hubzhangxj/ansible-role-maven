@@ -9,11 +9,8 @@
 #  tags:
 #    - maven
 
-- name: Copy Maven package
-  #copy: src={{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz owner=root group=root mode=0755
-  copy: src={{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz owner=root group=root mode=0755
-  tags:
-    - maven 
+- name: Download Maven package from ftp server
+  get_url: url=ftp://ftp:123456@htsat.vicp.cc/{{ maven_version }}.tar.gz dest={{ home_dir }}/{{ maven_version }}.tar.gz mode=0755
 
 - name: Decompressed Maven package 
   unarchive: src={{ home_dir }}/{{ maven_version }}.tar.gz dest={{ home_dir }} creates={{ maven_decompress }} copy=no
